@@ -1,0 +1,58 @@
+{
+  "name": "cmpe138-fe",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "prettier": {
+    "tabWidth": 2
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "dependencies": {
+    "@date-io/date-fns": "^1.3.11",
+    "@material-ui/core": "^4.0.0-beta.1",
+    "@material-ui/icons": "^4.0.0-beta.0",
+    "@material-ui/pickers": "^3.2.7",
+    "@material-ui/styles": "^4.0.0-beta.1",
+    "chart.js": "^2.7.3",
+    "classnames": "^2.2.6",
+    "date-fns": "^2.7.0",
+    "history": "^4.7.2",
+    "moment": "^2.24.0",
+    "node-sass": "^4.11.0",
+    "prop-types": "^15.7.1",
+    "react": "^16.8.6",
+    "react-chartjs-2": "^2.7.4",
+    "react-dom": "^16.8.6",
+    "react-perfect-scrollbar": "^1.4.4",
+    "react-redux": "^7.1.0",
+    "react-router-dom": "^5.0.0",
+    "react-scripts": "3.0.1",
+    "recompose": "^0.30.0",
+    "redux": "^4.0.4",
+    "serve": "^11.1.0",
+    "underscore": "^1.9.1",
+    "validate.js": "^0.12.0"
+  },
+  "devDependencies": {
+    "prettier": "1.18.2"
+  }
+}
