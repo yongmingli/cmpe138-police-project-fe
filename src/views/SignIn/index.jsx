@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { loginRedux } from "../../redux/actions";
@@ -30,8 +30,7 @@ import { loginAuth } from "../../services/auth";
 // Service methods
 const signIn = async credentials => {
   const res = await loginAuth(credentials);
-  console.log(res);
-  if (!res.status) {
+  if (!res.status || res.status !== 200) {
     throw new Error(res.error);
   } else {
     return res;
@@ -188,12 +187,6 @@ class SignIn extends Component {
                       Sign in now
                     </Button>
                   )}
-                  <Typography className={classes.signUp} variant="body1">
-                    Don't have an account?{" "}
-                    <Link className={classes.signUpUrl} to="/sign-up">
-                      Sign up
-                    </Link>
-                  </Typography>
                 </form>
               </div>
             </div>

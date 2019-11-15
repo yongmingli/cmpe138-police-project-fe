@@ -1,19 +1,21 @@
-import React, { useEffect } from "react";
-import { Route, Redirect } from "react-router-dom";
+import React from "react";
+import { Redirect, Route } from "react-router-dom";
 
 import { authenticate } from "../../services/auth";
 import { connect } from "react-redux";
 import { loginRedux } from "../../redux/actions";
+import { compose } from "redux";
 
-const PrivateRoute = ({ component: Component, access, ...rest }) => {
-  rest.dispatch({ type: "AUTHENTICATE" });
+const PrivateRoute = ({ component: Component, access, loginRedux, ...rest }) => {
+  // rest.dispatch({ type: "AUTHENTICATE" });
 
   authenticate().then(res => {
     if (!res.status) {
       localStorage.removeItem("jwt");
       window.location.href = "/sign-in";
     } else {
-      rest.dispatch(loginRedux(res.data.employee));
+      const { employee } = res.data;
+      loginRedux(employee);
     }
   });
 
@@ -36,4 +38,13 @@ const PrivateRoute = ({ component: Component, access, ...rest }) => {
   );
 };
 
-export default connect()(PrivateRoute);
+
+export default compose(
+  connect(
+    null,
+    { loginRedux }
+  ),
+)(PrivateRoute);
+
+
+// export default connect()(PrivateRoute);

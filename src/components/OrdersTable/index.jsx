@@ -23,7 +23,6 @@ import {
 } from "@material-ui/core";
 
 // Shared services
-import { getOrders } from "../../services/order";
 
 // Shared components
 import {
@@ -53,37 +52,6 @@ class OrdersTable extends Component {
     orders: [],
     ordersTotal: 0
   };
-
-  async getOrders(limit) {
-    try {
-      this.setState({ isLoading: true });
-
-      const { orders, ordersTotal } = await getOrders(limit);
-
-      if (this.signal) {
-        this.setState({
-          isLoading: false,
-          orders,
-          ordersTotal
-        });
-      }
-    } catch (error) {
-      if (this.signal) {
-        this.setState({
-          isLoading: false,
-          error
-        });
-      }
-    }
-  }
-
-  componentDidMount() {
-    this.signal = true;
-
-    const { limit } = this.state;
-
-    this.getOrders(limit);
-  }
 
   componentWillUnmount() {
     this.signal = false;

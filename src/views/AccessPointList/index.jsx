@@ -24,9 +24,6 @@ import {
 // Shared layouts
 import { Dashboard as DashboardLayout } from "../../layouts";
 
-// Shared services
-import { getAccessPoints } from "../../services/product";
-
 // Custom components
 import { ProductsToolbar, ProductCard } from "./components";
 
@@ -43,42 +40,6 @@ class AccessPointList extends Component {
     productsTotal: 0,
     error: null
   };
-
-  async getAccessPointList(limit) {
-    try {
-      this.setState({ isLoading: true });
-
-      const { products, productsTotal } = await getAccessPoints(limit);
-
-      if (this.signal) {
-        this.setState({
-          isLoading: false,
-          products,
-          productsTotal,
-          limit
-        });
-      }
-    } catch (error) {
-      if (this.signal) {
-        this.setState({
-          isLoading: false,
-          error
-        });
-      }
-    }
-  }
-
-  componentWillMount() {
-    this.signal = true;
-
-    const { limit } = this.state;
-
-    this.getAccessPointList(limit);
-  }
-
-  componentWillUnmount() {
-    this.signal = false;
-  }
 
   renderAccessPoints() {
     const { classes } = this.props;

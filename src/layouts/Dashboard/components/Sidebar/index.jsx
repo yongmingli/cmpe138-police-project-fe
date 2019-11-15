@@ -3,17 +3,21 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 
 import { Link } from "react-router-dom";
+
 // Externals
 import classNames from "classnames";
+
 import PropTypes from "prop-types";
-// Material helpers
+
 // Material components
-import { Avatar, Divider, List, Typography, withStyles } from "@material-ui/core";
+import { Avatar, CircularProgress, Divider, List, Typography, withStyles } from "@material-ui/core";
+
 // Material icons
 import {
   DashboardOutlined as DashboardIcon,
   SettingsOutlined as SettingsIcon,
 } from "@material-ui/icons";
+
 // Component styles
 import styles from "./styles";
 
@@ -39,21 +43,29 @@ class Sidebar extends Component {
           </Link>
         </div>
         <Divider className={classes.logoDivider}/>
-        <div className={classes.profile}>
-          <Link to="/account">
-            <Avatar
-              alt={user.username}
-              className={classes.avatar}
-              src="/images/avatars/avatar_3.png"
-            />
-          </Link>
-          <Typography className={classes.nameText} variant="h6">
-            {`${user.fname} ${user.lname}`}
-          </Typography>
-          <Typography className={classes.bioText} variant="caption">
-            {user.type}
-          </Typography>
-        </div>
+
+        { user.type === undefined ? (
+          <CircularProgress className={classes.progress} />
+        ) : (
+          <div className={classes.profile}>
+            <Link to="/settings">
+              <Avatar
+                alt={user.username}
+                className={classes.avatar}
+                src="/images/avatars/avatar_3.png"
+              />
+            </Link>
+            <Typography className={classes.nameText} variant="h6">
+              {`${user.fname} ${user.lname}`}
+            </Typography>
+            <Typography className={classes.bioText} variant="caption">
+              {user.type}
+            </Typography>
+          </div>
+        ) }
+
+
+
         <Divider className={classes.profileDivider}/>
         <List component="div" disablePadding>
           <SideBarItem text="Dashboard"

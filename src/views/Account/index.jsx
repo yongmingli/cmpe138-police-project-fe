@@ -14,7 +14,7 @@ import { withStyles } from "@material-ui/core";
 import { Grid, CircularProgress } from "@material-ui/core";
 
 // Shared layouts
-import { Dashboard as DashboardLayout } from "layouts";
+import { Dashboard as DashboardLayout } from "../../layouts";
 
 // Custom components
 import { AccountProfile, AccountDetails, Password } from "./components";
@@ -30,29 +30,25 @@ class Account extends Component {
     return (
       <DashboardLayout title="Account">
         <div className={classes.root}>
-          <Grid container spacing={4}>
-            <Grid item lg={4} md={6} xl={4} xs={12}>
-              <Grid container spacing={4}>
-                <Grid item lg={12} md={12} xl={12} xs={12}>
-                  {user.isFetching ? (
-                    <CircularProgress className={classes.progress} />
-                  ) : (
+          {user.type === undefined ? (
+            <CircularProgress className={classes.progress} />
+          ) : (
+            <Grid container spacing={4}>
+              <Grid item lg={4} md={6} xl={4} xs={12}>
+                <Grid container spacing={4}>
+                  <Grid item lg={12} md={12} xl={12} xs={12}>
                     <AccountProfile user={user} />
-                  )}
-                </Grid>
-                <Grid item lg={12} md={12} xl={12} xs={12}>
-                  <Password user={user} />
+                  </Grid>
+                  <Grid item lg={12} md={12} xl={12} xs={12}>
+                    <Password user={user} />
+                  </Grid>
                 </Grid>
               </Grid>
+              <Grid item lg={8} md={6} xl={8} xs={12}>
+                <AccountDetails user={user} />
+              </Grid>
             </Grid>
-            <Grid item lg={8} md={6} xl={8} xs={12}>
-              {user.isFetching ? (
-                <CircularProgress className={classes.progress} />
-              ) : (
-              <AccountDetails user={user} />
-              )}
-            </Grid>
-          </Grid>
+          )}
         </div>
       </DashboardLayout>
     );

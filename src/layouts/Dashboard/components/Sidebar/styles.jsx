@@ -29,6 +29,12 @@ export default theme => ({
     alignItems: "center",
     minHeight: "fit-content"
   },
+  progress: {
+    display: "block",
+    marginTop: theme.spacing(2),
+    marginLeft: "auto",
+    marginRight: "auto"
+  },
   avatar: {
     width: "100px",
     height: "100px"

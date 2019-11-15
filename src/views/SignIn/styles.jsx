@@ -138,17 +138,6 @@ export default theme => ({
     marginTop: theme.spacing(2),
     width: "100%"
   },
-  signUp: {
-    marginTop: theme.spacing(2),
-    color: theme.palette.text.secondary
-  },
-  signUpUrl: {
-    color: theme.palette.primary.main,
-    fontWeight: "bold",
-    "&:hover": {
-      color: theme.palette.primary.main
-    }
-  },
   fieldError: {
     color: theme.palette.danger.main,
     marginBottom: theme.spacing(2),

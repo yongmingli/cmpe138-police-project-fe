@@ -41,6 +41,7 @@ const updateProfile = async values => {
 
 class AccountDetails extends Component {
   state = {
+    type: "",
     values: {
       fname: "",
       lname: "",
@@ -112,7 +113,8 @@ class AccountDetails extends Component {
         fname: nextProps.user.fname,
         lname: nextProps.user.lname,
         username: nextProps.user.username
-      }
+      },
+      type: nextProps.user.type
     });
   }
 
@@ -125,7 +127,7 @@ class AccountDetails extends Component {
       touched,
       errors,
       isValid,
-      submitError,
+      type,
       isLoading
     } = this.state;
 
@@ -190,22 +192,17 @@ class AccountDetails extends Component {
                   {errors.username[0]}
                 </Typography>
               )}
-            </div>
-            <div className={classes.field}>
-              <TextField
+              { type === "POLICE_OFFICER" ? <TextField
                 className={classes.textField}
                 label="Zip Code"
                 margin="dense"
                 onChange={e => this.handleFieldChange("zipCode", e.target.value)}
                 value={values.zipCode}
                 variant="outlined"
-              />
-              {submitError && (
-                <Typography className={classes.fieldError} variant="body2">
-                  {submitError}
-                </Typography>
-              )}
+              /> : null}
+
             </div>
+
           </form>
         </PortletContent>
         <PortletFooter className={classes.portletFooter}>
