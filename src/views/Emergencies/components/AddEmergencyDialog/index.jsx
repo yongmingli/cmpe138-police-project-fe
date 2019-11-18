@@ -6,22 +6,18 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker
+} from '@material-ui/pickers';
 import "date-fns";
-import DateFnsUtils from "@date-io/date-fns";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
 
 export default function AddEmergencyDialog({ onClose }) {
   const [open, setOpen] = React.useState(false);
-  const [firstName, setFirstName] = React.useState("");
-  const [lastName, setLastName] = React.useState("");
-  const [username, setUsername] = React.useState("");
-  const [phone, setPhone] = React.useState("");
-  const [employeeType, setEmployeeType] = React.useState("");
-  const [selectedDate, setSelectedDate] = React.useState(new Date("1988-01-01"));
+  const [zipCode, setZipCode] = React.useState("");
+  const [note, setNote] = React.useState("");
+  const [selectedDate, setSelectedDate] = React.useState(Date.now());
 
   const handleDateChange = date => {
     setSelectedDate(date);
@@ -33,138 +29,86 @@ export default function AddEmergencyDialog({ onClose }) {
 
   const submit = () => {
     const params = {
-      firstName: firstName,
-      lastName: lastName,
-      username: username,
-      phone: phone,
-      type: employeeType,
-      dob: selectedDate
+      zipCode: zipCode,
+      startTime: selectedDate,
+      note: note
     };
-    setFirstName("");
-    setLastName("");
-    setUsername("");
-    setPhone("");
-    setEmployeeType("");
-    setSelectedDate(new Date("1988-01-01"));
+    setZipCode("");
+    setNote("");
+    setSelectedDate("");
     setOpen(false);
     onClose(true, params);
   };
 
   const handleClose = () => {
-    setFirstName("");
-    setLastName("");
-    setUsername("");
-    setPhone("");
-    setEmployeeType("");
-    setSelectedDate(new Date("1988-01-01"));
+    setZipCode("");
+    setNote("");
+    setSelectedDate("");
     setOpen(false);
     onClose(false);
   };
 
-  const handleSelectEmployeeType = event => {
-    setEmployeeType(event.target.value);
+  const handleZipCodeChange = event => {
+    setZipCode(event.target.value);
   };
-
-  const handleFirstNameChange = event => {
-    setFirstName(event.target.value);
+  
+  const handleNoteChange = event => {
+    setNote(event.target.value);
   };
-
-  const handleLastNameChange = event => {
-    setLastName(event.target.value);
-  };
-
-  const handleUsernameChange = event => {
-    setUsername(event.target.value);
-  };
-
-  const handlePhoneChange = event => {
-    setPhone(event.target.value);
-  };
-
+  
   const canSubmit = () => {
-    return !(selectedDate && username.length > 0 && firstName.length > 0 && lastName.length > 0 && employeeType.length > 0 && phone.length > 0);
+    return !(zipCode.length > 0);
   };
 
   return (
     <div>
       <Button color="primary" size="small" variant="outlined" onClick={handleClickOpen}>
-        Add Employee
+        Add Emergency 
       </Button>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Create a new employee</DialogTitle>
+        <DialogTitle id="form-dialog-title">Report a new emergency</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {"To create a new employee, fill out the form below and submit. The employee will then be created with a default password."}
+            {"To report an emergency fill out the form below and click submit."}
           </DialogContentText>
           <TextField
-            autoFocus
             margin="dense"
-            id="fn"
-            label="First Name"
+            id="zipCode"
+            label="Zipcode"
             type="text"
-            fullWidth
-            onChange={handleFirstNameChange}
-          />
-          <TextField
-            margin="dense"
-            id="ln"
-            label="Last Name"
-            type="text"
-            fullWidth
-            onChange={handleLastNameChange}
-          />
-          <TextField
-            margin="dense"
-            id="un"
-            label="Username"
-            type="text"
-            onChange={handleUsernameChange}
+            onChange={handleZipCodeChange}
             fullWidth
           />
-          <TextField
-            margin="dense"
-            id="phone"
-            label="Phone"
-            type="text"
-            onChange={handlePhoneChange}
-            fullWidth
-          />
-          <FormControl margin="dense"
-                       fullWidth/*className={classes.formControl}*/>
-            <InputLabel id="demo-simple-select-label">Employee Type</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={employeeType}
-              onChange={handleSelectEmployeeType}
-            >
-              <MenuItem value={"ADMIN"}>Administrator</MenuItem>
-              <MenuItem value={"CALL_OPERATOR"}>Call Operator</MenuItem>
-              <MenuItem value={"POLICE_OFFICER"}>Police Officer</MenuItem>
-            </Select>
-          </FormControl>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker
-              variant="inline"
-              format="yyyy/MM/dd"
-              margin="dense"
-              id="date-picker-inline"
-              label="DOB"
+            <KeyboardTimePicker
+              margin="normal"
+              id="time-picker"
+              label="Emergency Start Time"
               value={selectedDate}
               onChange={handleDateChange}
               KeyboardButtonProps={{
-                "aria-label": "change date"
+                'aria-label': 'change time',
               }}
             />
           </MuiPickersUtilsProvider>
-
+          <TextField
+            id="notes"
+            label="Description"
+            multiline
+            rows="4"
+            value={note}
+            onChange={handleNoteChange}
+            margin="dense"
+            variant="filled"
+            fullWidth
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
           <Button onClick={submit} disabled={canSubmit()} color="primary">
-            Create
+            Submit 
           </Button>
         </DialogActions>
       </Dialog>

@@ -37,7 +37,7 @@ class Emergencies extends Component {
     try {
       this.setState({ isLoading: true });
 
-      const { limit } = this.state; // TODO add pagination
+      // const { limit } = this.state; // TODO add pagination
 
       const { emergencies } = await getEmergencies(/*limit*/); // TODO add pagination
 
@@ -63,7 +63,7 @@ class Emergencies extends Component {
       try {
         await createEmergency({ ...params });
       } catch (e) {
-        console.log("error creating employee", e);
+        console.log("error creating emergency", e);
       }
     }
   };
@@ -112,7 +112,7 @@ class Emergencies extends Component {
     return (
       <DashboardLayout title="Emergencies">
         <div className={classes.root}>
-          <EmergencyToolbar createEmployee={this.addEmergency} />
+          <EmergencyToolbar createEmergency={this.addEmergency} />
           <div className={classes.content}>{this.renderEmergencies(emergencies)}</div>
         </div>
       </DashboardLayout>

@@ -1,19 +1,18 @@
 export default {
-  firstName: {
+  fname: {
     presence: { allowEmpty: false, message: "is required" },
     length: {
       maximum: 32
     }
   },
-  lastName: {
+  lname: {
     presence: { allowEmpty: false, message: "is required" },
     length: {
       maximum: 32
     }
   },
-  email: {
+  username: {
     presence: { allowEmpty: false, message: "is required" },
-    email: true,
     length: {
       maximum: 64
     }

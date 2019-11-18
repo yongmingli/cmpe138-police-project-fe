@@ -10,10 +10,10 @@ import { withStyles } from "@material-ui/core";
 // Shared components
 import { SearchInput } from "../../../../components";
 
+import { AddEmergencyDialog }  from "../index";
+
 // Component styles
 import styles from "./styles";
-import { AddEmployeeDialog } from "../index";
-import AddEmergencyDialog from "../AddEmergencyDialog";
 
 class EmergencyToolbar extends Component {
 

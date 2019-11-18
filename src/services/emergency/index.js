@@ -1,5 +1,7 @@
 import { apiBase } from "../config";
 
-export const createEmergency = () => {};
+export const createEmergency = async () => {};
 
-export const getEmergencies = () => {};
+export const getEmergencies = async () => {
+  return { emergencies: [] };
+};

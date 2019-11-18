@@ -23,16 +23,17 @@ import {
 // Component styles
 import styles from "./styles";
 import schema from "./schema";
-import { updateUser } from "../../../../services/user";
+import { updateEmployee } from "../../../../services/user";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { loginRedux } from "../../../../redux/actions";
 
 // Service methods
 const updateProfile = async values => {
-  const res = await updateUser(values);
+  const res = await updateEmployee(values);
 
   if (!res.status) {
+    console.log(res);
     throw new Error(res.error);
   } else {
     return res;
@@ -91,14 +92,17 @@ class AccountDetails extends Component {
 
   handleUpdateProfile = async () => {
     try {
-      const { values } = this.state;
+      const { fname, lname } = this.state.values;
+      const { user } = this.props;
 
       this.setState({ isLoading: true });
-      const res = await updateProfile(values);
+      const res = await updateProfile({eid: user.e_id, fname, lname});
 
       this.setState({ isLoading: false, submitError: null });
+      console.log(res);
       this.props.loginRedux(res.data.user);
     } catch (error) {
+      console.log(error);
       this.setState({
         isLoading: false,
         submitError: error.toString()

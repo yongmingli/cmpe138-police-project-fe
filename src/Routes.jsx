@@ -21,7 +21,7 @@ export default class Routes extends Component {
         <Redirect exact from="/" to="/dashboard" />
         <PrivateRoute component={Dashboard} exact path="/dashboard" />
         <PrivateRoute component={Employees} exact path="/employees" />
-        <PrivateRoute component={Emergencies} exact path="/emergency" />
+        <PrivateRoute component={Emergencies} exact path="/emergencies" />
         <PrivateRoute component={AccessPointList} exact path="/access-points" />
         <PrivateRoute component={Account} exact path="/settings" />
         <Route component={SignIn} exact path="/sign-in" />
