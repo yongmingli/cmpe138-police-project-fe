@@ -43,6 +43,7 @@ class EmergencyTable extends Component {
 
   render() {
     const { classes, className, emergencies } = this.props;
+    console.log(emergencies);
     const { rowsPerPage, page } = this.state;
 
     const rootClassName = classNames(classes.root, className);
@@ -52,20 +53,22 @@ class EmergencyTable extends Component {
         <PortletContent noPadding>
           <PerfectScrollbar>
             <Toolbar>
-                <Typography className={classes.title} variant="h6" id="tableTitle">
-                  Emergencies
-                </Typography>
+              <Typography
+                className={classes.title}
+                variant="h6"
+                id="tableTitle"
+              >
+                Emergencies
+              </Typography>
             </Toolbar>
             <Table>
               <TableHead>
                 <TableRow>
                   <TableCell align="left">EID</TableCell>
-                  <TableCell align="left">Type</TableCell>
-                  <TableCell align="left">Username</TableCell>
-                  <TableCell align="left">Name</TableCell>
-                  <TableCell align="left">DOB</TableCell>
-                  <TableCell align="left">Phone</TableCell>
+                  <TableCell align="left">Status</TableCell>
                   <TableCell align="left">Zip Code</TableCell>
+                  <TableCell align="left">Started At</TableCell>
+                  <TableCell align="left">Lead Responder</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -75,28 +78,24 @@ class EmergencyTable extends Component {
                     <TableRow
                       className={classes.tableRow}
                       hover
-                      key={emergency.e_id}
+                      key={emergency.emergency_id}
                     >
                       <TableCell className={classes.tableCell}>
-                        {`EMP${emergency.e_id}`}
+                        {`EMRG${emergency.emergency_id}`}
                       </TableCell>
                       <TableCell className={classes.tableCell}>
-                        {emergency.type}
+                        {emergency.status}
                       </TableCell>
                       <TableCell className={classes.tableCell}>
-                        {emergency.username}
+                        {emergency.zipcode}
                       </TableCell>
                       <TableCell className={classes.tableCell}>
-                        {`${emergency.fname} ${emergency.lname}`}
+                        {moment(emergency.started_at).format("YYYY/MM/DD hh:mm")}
                       </TableCell>
                       <TableCell className={classes.tableCell}>
-                        {moment(emergency.dob).format("YYYY/MM/DD")}
-                      </TableCell>
-                      <TableCell className={classes.tableCell}>
-                        {emergency.phone}
-                      </TableCell>
-                      <TableCell className={classes.tableCell}>
-                        {emergency.zipcode ? emergency.zipcode : "N/A"}
+                        {emergency.lead_responder
+                          ? emergency.lead_responder
+                          : "None Assigned"}
                       </TableCell>
                     </TableRow>
                   ))}
