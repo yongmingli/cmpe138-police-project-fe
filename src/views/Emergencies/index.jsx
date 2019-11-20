@@ -1,12 +1,8 @@
 import React, { Component } from "react";
-
-// Externals
 import PropTypes from "prop-types";
 
-// Material helpers
+// Material
 import { withStyles } from "@material-ui/core";
-
-// Material components
 import { CircularProgress, Typography } from "@material-ui/core";
 
 // Shared layouts
@@ -21,11 +17,7 @@ import { EmergencyToolbar, EmergencyTable } from "./components";
 // Component styles
 import styles from "./style";
 
-// TODO: refresh table when emergency is created.
-
 class Emergencies extends Component {
-  signal = true;
-
   state = {
     isLoading: false,
     limit: 10,
@@ -33,28 +25,23 @@ class Emergencies extends Component {
     error: null
   };
 
-  async getUsers() {
+  async fetchEmergencies() {
     try {
       this.setState({ isLoading: true });
 
-      // const { limit } = this.state; // TODO add pagination
-
       const { emergencies } = await getEmergencies(/*limit*/); // TODO add pagination
 
-      if (this.signal) {
-        this.setState({
-          isLoading: false,
-          emergencies
-        });
-      }
+      this.setState({
+        isLoading: false,
+        emergencies
+      });
     } catch (error) {
+      const msg = error.toString();
       console.log(error);
-      if (this.signal) {
-        this.setState({
-          isLoading: false,
-          //error
-        });
-      }
+      this.setState({
+        isLoading: false,
+        error: msg
+      });
     }
   }
 
@@ -62,22 +49,19 @@ class Emergencies extends Component {
     if (create) {
       try {
         await createEmergency({ ...params });
+        await this.fetchEmergencies();
       } catch (e) {
         console.log("error creating emergency", e);
       }
     }
-  };
-
-  componentDidMount() {
-    this.signal = true;
-    this.getUsers();
   }
 
-  componentWillUnmount() {
-    this.signal = false;
+  componentDidMount() {
+    this.fetchEmergencies();
   }
 
   renderEmergencies(emergencies) {
+    console.log("renderEmergencies called", emergencies);
     const { classes } = this.props;
     const { isLoading, error } = this.state;
 
@@ -100,6 +84,7 @@ class Emergencies extends Component {
     return (
       <EmergencyTable
         emergencies={emergencies}
+        refresh={this.fetchEmergencies.bind(this)}
       />
     );
   }
@@ -112,8 +97,10 @@ class Emergencies extends Component {
     return (
       <DashboardLayout title="Emergencies">
         <div className={classes.root}>
-          <EmergencyToolbar createEmergency={this.addEmergency} />
-          <div className={classes.content}>{this.renderEmergencies(emergencies)}</div>
+          <EmergencyToolbar createEmergency={this.addEmergency.bind(this)} />
+          <div className={classes.content}>
+            {this.renderEmergencies(emergencies)}
+          </div>
         </div>
       </DashboardLayout>
     );

@@ -1,31 +1,36 @@
-import React, { Component } from "react";
-
 // Externals
 import classNames from "classnames";
-import PropTypes from "prop-types";
 import moment from "moment";
+import PropTypes from "prop-types";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { compose } from "redux";
 import PerfectScrollbar from "react-perfect-scrollbar";
 
 // Material helpers
-import { withStyles } from "@material-ui/core";
-
-// Material components
 import {
+  IconButton,
   Table,
   TableBody,
   TableCell,
   TableHead,
+  TablePagination,
   TableRow,
-  TablePagination
+  withStyles,
+  Tooltip
 } from "@material-ui/core";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import { EditRounded } from "@material-ui/icons";
+
+import { getUser } from "../../../../redux/selectors";
 
 // Shared components
 import { Portlet, PortletContent } from "../../../../components";
-
 // Component styles
 import styles from "./styles";
-import Typography from "@material-ui/core/Typography";
-import Toolbar from "@material-ui/core/Toolbar";
+import ViewEmergencyModal from "views/Emergencies/ViewEmergencyModal";
+import AddNoteDialog from "views/Emergencies/components/AddNoteDialog";
 
 class EmergencyTable extends Component {
   state = {
@@ -33,7 +38,7 @@ class EmergencyTable extends Component {
     page: 0
   };
 
-  handleChangePage = (event, page) => {
+  handleChangePage = (_, page) => {
     this.setState({ page });
   };
 
@@ -42,8 +47,7 @@ class EmergencyTable extends Component {
   };
 
   render() {
-    const { classes, className, emergencies } = this.props;
-    console.log(emergencies);
+    const { classes, className, emergencies, user, refresh } = this.props;
     const { rowsPerPage, page } = this.state;
 
     const rootClassName = classNames(classes.root, className);
@@ -69,6 +73,7 @@ class EmergencyTable extends Component {
                   <TableCell align="left">Zip Code</TableCell>
                   <TableCell align="left">Started At</TableCell>
                   <TableCell align="left">Lead Responder</TableCell>
+                  <TableCell align="left">Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -90,12 +95,42 @@ class EmergencyTable extends Component {
                         {emergency.zipcode}
                       </TableCell>
                       <TableCell className={classes.tableCell}>
-                        {moment(emergency.started_at).format("YYYY/MM/DD hh:mm")}
+                        {moment(emergency.started_at).format(
+                          "YYYY/MM/DD hh:mm"
+                        )}
                       </TableCell>
                       <TableCell className={classes.tableCell}>
                         {emergency.lead_responder
                           ? emergency.lead_responder
                           : "None Assigned"}
+                      </TableCell>
+                      <TableCell className={classes.tableCell}>
+                        <ViewEmergencyModal
+                          emergency={emergency}
+                          onClose={action => {
+                            if (action) {
+                              refresh();
+                            }
+                          }}
+                        />
+                        <AddNoteDialog
+                          onClose={refresh}
+                          emergency={emergency}
+                          user={user}
+                        />
+                        {user.type === "CALL_OPERATOR" ? (
+                          <Tooltip title="Edit Emergency">
+                            <IconButton
+                              className={classes.button}
+                              aria-label="edit emergency"
+                              onClick={() => {
+                                alert("hi");
+                              }}
+                            >
+                              <EditRounded />
+                            </IconButton>
+                          </Tooltip>
+                        ) : null}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -134,4 +169,11 @@ EmergencyTable.defaultProps = {
   emergencies: []
 };
 
-export default withStyles(styles)(EmergencyTable);
+const mapStateToProps = state => {
+  return getUser(state);
+};
+
+export default compose(
+  connect(mapStateToProps),
+  withStyles(styles)
+)(EmergencyTable);

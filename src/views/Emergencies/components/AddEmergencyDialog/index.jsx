@@ -6,11 +6,11 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import DateFnsUtils from '@date-io/date-fns';
+import DateFnsUtils from "@date-io/date-fns";
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker
-} from '@material-ui/pickers';
+} from "@material-ui/pickers";
 import "date-fns";
 
 export default function AddEmergencyDialog({ onClose }) {
@@ -51,21 +51,30 @@ export default function AddEmergencyDialog({ onClose }) {
   const handleZipCodeChange = event => {
     setZipCode(event.target.value);
   };
-  
+
   const handleNoteChange = event => {
     setNote(event.target.value);
   };
-  
+
   const canSubmit = () => {
     return !(zipCode.length > 0);
   };
 
   return (
     <div>
-      <Button color="primary" size="small" variant="outlined" onClick={handleClickOpen}>
-        Add Emergency 
+      <Button
+        color="primary"
+        size="small"
+        variant="outlined"
+        onClick={handleClickOpen}
+      >
+        Add Emergency
       </Button>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+      >
         <DialogTitle id="form-dialog-title">Report a new emergency</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -87,7 +96,7 @@ export default function AddEmergencyDialog({ onClose }) {
               value={selectedDate}
               onChange={handleDateChange}
               KeyboardButtonProps={{
-                'aria-label': 'change time',
+                "aria-label": "change time"
               }}
             />
           </MuiPickersUtilsProvider>
@@ -108,7 +117,7 @@ export default function AddEmergencyDialog({ onClose }) {
             Cancel
           </Button>
           <Button onClick={submit} disabled={canSubmit()} color="primary">
-            Submit 
+            Submit
           </Button>
         </DialogActions>
       </Dialog>

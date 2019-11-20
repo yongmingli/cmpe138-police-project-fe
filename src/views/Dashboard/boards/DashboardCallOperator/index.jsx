@@ -13,11 +13,7 @@ import { Grid } from "@material-ui/core";
 import { Dashboard as DashboardLayout } from "../../../../layouts";
 
 // Custom components
-import {
-  EmergenciesInProgress,
-  Employees,
-  EmergenciesResolved
-} from "../../components";
+import { EmergenciesInProgress, EmergenciesResolved } from "../../components";
 
 // Component styles
 import styles from "./styles";
@@ -34,10 +30,10 @@ class DashboardCallOperator extends Component {
     try {
       this.setState({ isLoading: true });
       const { emergencies } = await getEmergencies();
-      
+
       this.setState({
         isLoading: false,
-        emergencies 
+        emergencies
       });
     } catch (error) {
       console.log(error);
@@ -52,10 +48,9 @@ class DashboardCallOperator extends Component {
     this.fetchEmergencies();
   }
 
-  renderUsers() {
+  renderEmergencies() {
     const { classes } = this.props;
     const { isLoading, emergencies, error } = this.state;
-    console.log("asd1", this.state);
     if (isLoading) {
       return (
         <div className={classes.progressWrapper}>
@@ -82,17 +77,14 @@ class DashboardCallOperator extends Component {
       <DashboardLayout title="Dashboard">
         <div className={classes.root}>
           <Grid container spacing={4}>
-            <Grid item lg={4} sm={6} xl={4} xs={12}>
-              <Employees className={classes.item} />
-            </Grid>
-            <Grid item lg={4} sm={6} xl={4} xs={12}>
+            <Grid item lg={6} sm={6} xl={6} xs={12}>
               <EmergenciesInProgress className={classes.item} />
             </Grid>
-            <Grid item lg={4} sm={6} xl={4} xs={12}>
+            <Grid item lg={6} sm={6} xl={6} xs={12}>
               <EmergenciesResolved className={classes.item} />
             </Grid>
             <Grid item lg={12} md={12} xl={12} xs={12}>
-              {this.renderUsers()}
+              {this.renderEmergencies()}
             </Grid>
           </Grid>
         </div>

@@ -11,10 +11,7 @@ import { withStyles } from "@material-ui/core";
 import { Typography } from "@material-ui/core";
 
 // Material icons
-import {
-  ArrowUpward as ArrowUpwardIcon,
-  PeopleOutlined as PeopleIcon
-} from "@material-ui/icons";
+import { PeopleOutlined as PeopleIcon } from "@material-ui/icons";
 
 // Shared components
 import { Paper } from "components";

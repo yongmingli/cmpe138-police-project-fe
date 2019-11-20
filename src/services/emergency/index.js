@@ -1,14 +1,18 @@
 import { apiBase } from "../config";
 
+const emergencyStatus = {
+  IN_PROGRESS: "IN_PROGRESS"
+};
+
 export const createEmergency = async ({
-  status,
   zipCode,
   startTime,
   leadResponder
 }) => {
   let body = {
-    status: status,
+    status: emergencyStatus.IN_PROGRESS,
     zipCode: zipCode,
+    // TODO: leadResponder: leadResponder,
     startTime: startTime
   };
 
@@ -30,6 +34,34 @@ export const createEmergency = async ({
 
 export const getEmergencies = async () => {
   return fetch(`${apiBase}/emergency`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("jwt")
+    }
+  }).then(result => {
+    return result.json();
+  });
+};
+
+export const resolveEmergency = async emergency_id => {
+  const body = {
+    emergencyId: emergency_id
+  };
+  return fetch(`${apiBase}/emergency-resolve`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("jwt")
+    },
+    body: JSON.stringify(body)
+  }).then(result => {
+    return result.json();
+  });
+};
+
+export const getNotesForEmergency = async emergency_id => {
+  return fetch(`${apiBase}/emergency-note?eid=${emergency_id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

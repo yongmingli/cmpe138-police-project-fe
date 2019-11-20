@@ -26,7 +26,7 @@ class Account extends Component {
   state = { tabIndex: 0 };
 
   render() {
-    const { classes, user, ...rest} = this.props;
+    const { classes, user } = this.props;
     return (
       <DashboardLayout title="Account">
         <div className={classes.root}>

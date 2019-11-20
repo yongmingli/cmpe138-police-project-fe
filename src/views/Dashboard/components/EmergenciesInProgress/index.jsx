@@ -11,10 +11,7 @@ import { withStyles } from "@material-ui/core";
 import { Typography } from "@material-ui/core";
 
 // Material icons
-import {
-  ArrowDownward as ArrowDownwardIcon,
-  Money as MoneyIcon
-} from "@material-ui/icons";
+import { Money as MoneyIcon } from "@material-ui/icons";
 
 // Shared components
 import { Paper } from "../../../../components";

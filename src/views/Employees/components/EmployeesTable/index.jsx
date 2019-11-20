@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { compose } from "redux";
 
 // Externals
 import classNames from "classnames";
@@ -16,8 +18,13 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  TablePagination
+  TablePagination,
+  Tooltip,
+  IconButton
 } from "@material-ui/core";
+import { EditRounded, VisibilityRounded } from "@material-ui/icons";
+
+import { getUser } from "../../../../redux/selectors";
 
 // Shared components
 import { Portlet, PortletContent } from "../../../../components";
@@ -42,7 +49,7 @@ class UsersTable extends Component {
   };
 
   render() {
-    const { classes, className, employees } = this.props;
+    const { classes, className, employees, user } = this.props;
     const { rowsPerPage, page } = this.state;
 
     const rootClassName = classNames(classes.root, className);
@@ -52,9 +59,13 @@ class UsersTable extends Component {
         <PortletContent noPadding>
           <PerfectScrollbar>
             <Toolbar>
-                <Typography className={classes.title} variant="h6" id="tableTitle">
-                  Employees
-                </Typography>
+              <Typography
+                className={classes.title}
+                variant="h6"
+                id="tableTitle"
+              >
+                Employees
+              </Typography>
             </Toolbar>
             <Table>
               <TableHead>
@@ -66,6 +77,7 @@ class UsersTable extends Component {
                   <TableCell align="left">DOB</TableCell>
                   <TableCell align="left">Phone</TableCell>
                   <TableCell align="left">Zip Code</TableCell>
+                  <TableCell align="left">Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -97,6 +109,32 @@ class UsersTable extends Component {
                       </TableCell>
                       <TableCell className={classes.tableCell}>
                         {employee.zipcode ? employee.zipcode : "N/A"}
+                      </TableCell>
+                      <TableCell className={classes.tableCell}>
+                        {user.type === "ADMIN" ? (
+                          <Tooltip title="Edit Employee">
+                            <IconButton
+                              className={classes.button}
+                              aria-label="edit employee"
+                              onClick={() => {
+                                alert("hi");
+                              }}
+                            >
+                              <EditRounded />
+                            </IconButton>
+                          </Tooltip>
+                        ) : null}
+                        <Tooltip title="View Employee">
+                          <IconButton
+                            className={classes.button}
+                            aria-label="view employee"
+                            onClick={() => {
+                              alert("hi");
+                            }}
+                          >
+                            <VisibilityRounded />
+                          </IconButton>
+                        </Tooltip>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -135,4 +173,11 @@ UsersTable.defaultProps = {
   employees: []
 };
 
-export default withStyles(styles)(UsersTable);
+const mapStateToProps = state => {
+  return getUser(state);
+};
+
+export default compose(
+  connect(mapStateToProps),
+  withStyles(styles)
+)(UsersTable);

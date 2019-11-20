@@ -30,7 +30,7 @@ class EmergenciesResolved extends Component {
         <div className={classes.content}>
           <div className={classes.details}>
             <Typography className={classes.title} variant="body2">
-              ALLOWED ACCESS
+              EMERGENCIES RESOLVED
             </Typography>
             <Typography className={classes.value} variant="h3">
               1,400

@@ -16,17 +16,14 @@ import { Dashboard as DashboardLayout } from "layouts";
 import { createEmployee, getEmployees } from "../../services/user";
 
 // Custom components
-import { EmployeesToolbar, EmployeesTable, AddEmployeeDialog } from "./components";
+import { EmployeesToolbar, EmployeesTable } from "./components";
 
 // Component styles
 import styles from "./style";
-import { SearchInput } from "../../components";
 
 // TODO: refresh table when employee is created.
 
 class Employees extends Component {
-  signal = true;
-
   state = {
     isLoading: false,
     limit: 10,
@@ -38,24 +35,21 @@ class Employees extends Component {
     try {
       this.setState({ isLoading: true });
 
-      const { limit } = this.state; // TODO add pagination
+      //      const { limit } = this.state; // TODO add pagination
 
       const { employees } = await getEmployees(/*limit*/); // TODO add pagination
 
-      if (this.signal) {
-        this.setState({
-          isLoading: false,
-          employees
-        });
-      }
+      this.setState({
+        isLoading: false,
+        employees
+      });
     } catch (error) {
       console.log(error);
-      if (this.signal) {
-        this.setState({
-          isLoading: false,
-          //error
-        });
-      }
+      const msg = error.toString();
+      this.setState({
+        isLoading: false,
+        error: msg
+      });
     }
   }
 
@@ -63,20 +57,15 @@ class Employees extends Component {
     if (create) {
       try {
         await createEmployee({ ...params });
-        this.getUsers();
+        await this.getUsers();
       } catch (e) {
         console.log("error creating employee", e);
       }
     }
-  };
-
-  componentDidMount() {
-    this.signal = true;
-    this.getUsers();
   }
 
-  componentWillUnmount() {
-    this.signal = false;
+  componentDidMount() {
+    this.getUsers();
   }
 
   renderUsers(employees) {
@@ -99,11 +88,7 @@ class Employees extends Component {
       return <Typography variant="h6">There are no employees</Typography>;
     }
 
-    return (
-      <EmployeesTable
-        employees={employees}
-      />
-    );
+    return <EmployeesTable employees={employees} />;
   }
 
   render() {
@@ -114,7 +99,7 @@ class Employees extends Component {
     return (
       <DashboardLayout title="Employees">
         <div className={classes.root}>
-          <EmployeesToolbar createEmployee={this.addEmployee} />
+          <EmployeesToolbar createEmployee={this.addEmployee.bind(this)} />
           <div className={classes.content}>{this.renderUsers(employees)}</div>
         </div>
       </DashboardLayout>
