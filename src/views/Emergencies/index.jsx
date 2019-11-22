@@ -117,8 +117,20 @@ class Emergencies extends Component {
     const { emergencies } = this.state;
 
     return (
+
       <DashboardLayout title="Emergencies">
         <div className={classes.root}>
+        <Grid container spacing={4}>
+          <Grid item lg={6} sm={6} xl={6} xs={12}>
+            <EmergenciesInProgress className={classes.item} />
+          </Grid>
+          <Grid item lg={6} sm={6} xl={6} xs={12}>
+            <EmergenciesResolved className={classes.item} />
+          </Grid>
+          <Grid item lg={12} md={12} xl={12} xs={12}>
+            {this.renderEmergencies()}
+          </Grid>
+        </Grid>
           <EmergencyToolbar
             createEmergency={this.addEmergency.bind(this)}
             search={this.fetchEmergencies.bind(this)}
