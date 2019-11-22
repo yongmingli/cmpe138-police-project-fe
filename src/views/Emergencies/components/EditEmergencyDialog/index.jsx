@@ -41,15 +41,19 @@ export default function EditEmergencyDialog({ onClose, emergency }) {
   };
 
   const handleLeadResponderChange = async event => {
-    try {
-      setLeadResponder(event.target.value);
-      const { employees } = await searchEmployee({
-        employee_name: event.target.value
-      });
-      console.log(employees);
-      // setEmployees(employees);
-    } catch (e) {
-      console.log(e);
+    if (event.target.value === "") {
+      //setEmployees([]);
+    } else {
+      try {
+        setLeadResponder(event.target.value);
+        const { employees } = await searchEmployee({
+          employee_name: event.target.value
+        });
+        console.log(employees);
+        setEmployees(employees);
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
 
@@ -89,9 +93,20 @@ export default function EditEmergencyDialog({ onClose, emergency }) {
             fullWidth
           />
           <Autocomplete
-            id="free-solo-demo"
+            id="search-lead"
             freeSolo
+            disableOpenOnFocus
             options={employees}
+            getOptionLabel={option =>
+              `${option.fname} ${option.lname} - ${option.zipcode}`
+            }
+            renderOption={option => (
+              <React.Fragment>
+                <span>
+                  {`${option.fname} ${option.lname} - ${option.zipcode}`}
+                </span>
+              </React.Fragment>
+            )}
             renderInput={params => (
               <TextField
                 {...params}
@@ -99,7 +114,6 @@ export default function EditEmergencyDialog({ onClose, emergency }) {
                 margin="normal"
                 // variant="outlined"
                 onChange={handleLeadResponderChange}
-                value={leadResponder}
                 fullWidth
               />
             )}
