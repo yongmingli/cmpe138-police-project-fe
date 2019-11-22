@@ -16,9 +16,15 @@ import { AddEmergencyDialog } from "../index";
 import styles from "./styles";
 
 class EmergencyToolbar extends Component {
-  handleSearch = params => {
-    console.log(params.target);
-  };
+  // handleSearch = params => {
+  //   console.log(params.target);
+  // };
+
+  handleSearch(event){
+    console.log(event.target.value); // TESTING
+    search (event.target.value); 
+    this.setState({value: event.target.value});
+  }
 
   render() {
     const { classes, className, search } = this.props;
@@ -29,6 +35,7 @@ class EmergencyToolbar extends Component {
       <div className={rootClassName}>
         <div className={classes.row}>
           <SearchInput
+            value = {this.state.value}
             className={classes.searchInput}
             placeholder="Search emergencies"
             onChange={this.handleSearch}
