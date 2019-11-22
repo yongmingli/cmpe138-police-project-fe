@@ -15,31 +15,68 @@ import { Dashboard as DashboardLayout } from "../../../../layouts";
 // Custom components
 import { EmergenciesInProgress, EmergenciesResolved } from "../../components";
 
+import {
+  createEmergency,
+  getEmergencies,
+  updateEmergency,
+  searchEmergency
+} from "services/emergency";
+
 // Component styles
 import styles from "./styles";
-import { getEmergencies } from "../../../../services/emergency";
 import { EmergencyTable } from "../../../Emergencies/components";
+import { EmergencyToolbar } from "views/Emergencies/components";
 
 class DashboardCallOperator extends Component {
   state = {
     isLoading: false,
-    emergencies: []
+    emergencies: [],
+    error: null
   };
 
-  async fetchEmergencies() {
+  async addEmergency(create, params) {
+    if (create) {
+      try {
+        await createEmergency({ ...params });
+        await this.fetchEmergencies();
+      } catch (e) {
+        console.log("error creating emergency", e);
+      }
+    }
+  }
+
+  async editEmergency(params) {
+    try {
+      await updateEmergency({ ...params });
+      await this.fetchEmergencies();
+    } catch (e) {
+      console.log("error updating emergency", e);
+    }
+  }
+
+  async fetchEmergencies(q) {
     try {
       this.setState({ isLoading: true });
-      const { emergencies } = await getEmergencies();
 
-      this.setState({
-        isLoading: false,
-        emergencies
-      });
+      if (q) {
+        const { emergencies } = await searchEmergency({ emergency_name: q });
+        this.setState({
+          isLoading: false,
+          emergencies
+        });
+      } else {
+        const { emergencies } = await getEmergencies(/*limit*/); // TODO add pagination
+        this.setState({
+          isLoading: false,
+          emergencies
+        });
+      }
     } catch (error) {
+      const msg = error.toString();
       console.log(error);
       this.setState({
         isLoading: false,
-        error
+        error: msg
       });
     }
   }
@@ -48,9 +85,11 @@ class DashboardCallOperator extends Component {
     this.fetchEmergencies();
   }
 
-  renderEmergencies() {
+  renderEmergencies(emergencies) {
+    console.log("renderEmergencies called", emergencies);
     const { classes } = this.props;
-    const { isLoading, emergencies, error } = this.state;
+    const { isLoading, error } = this.state;
+
     if (isLoading) {
       return (
         <div className={classes.progressWrapper}>
@@ -67,11 +106,18 @@ class DashboardCallOperator extends Component {
       return <Typography variant="h6">There are no emergencies</Typography>;
     }
 
-    return <EmergencyTable emergencies={emergencies} />;
+    return (
+      <EmergencyTable
+        emergencies={emergencies}
+        refresh={this.fetchEmergencies.bind(this)}
+        updateEmergency={this.editEmergency.bind(this)}
+      />
+    );
   }
 
   render() {
     const { classes } = this.props;
+    const { emergencies } = this.state;
 
     return (
       <DashboardLayout title="Dashboard">
@@ -84,7 +130,11 @@ class DashboardCallOperator extends Component {
               <EmergenciesResolved className={classes.item} />
             </Grid>
             <Grid item lg={12} md={12} xl={12} xs={12}>
-              {this.renderEmergencies()}
+              <EmergencyToolbar
+                createEmergency={this.addEmergency.bind(this)}
+                search={this.fetchEmergencies.bind(this)}
+              />
+              {this.renderEmergencies(emergencies)}
             </Grid>
           </Grid>
         </div>
