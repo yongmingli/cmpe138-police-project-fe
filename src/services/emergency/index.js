@@ -71,3 +71,16 @@ export const getNotesForEmergency = async emergency_id => {
     return result.json();
   });
 };
+
+export const searchEmergency = async ({emergency_name}) =>{
+
+  return fetch(`${apiBase}/emergency-search?desired_search=${emergency_name}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("jwt")
+    }
+  }).then(result => {
+    return result.json();
+  });
+};

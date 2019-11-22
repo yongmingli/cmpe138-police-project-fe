@@ -82,3 +82,16 @@ export const getEmployees = () => {
     return result.json();
   });
 };
+
+export const searchEmployee = async ({employee_name}) =>{
+
+  return fetch(`${apiBase}/employee-search?desired_search=${employee_name}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("jwt")
+    }
+  }).then(result => {
+    return result.json();
+  });
+};
