@@ -5,6 +5,12 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import { CircularProgress, Typography } from "@material-ui/core";
 
+// Material components
+import { Grid } from "@material-ui/core";
+
+// Custom components
+import { EmergenciesInProgress, EmergenciesResolved } from "./components";
+
 // Shared layouts
 import { Dashboard as DashboardLayout } from "../../layouts";
 
