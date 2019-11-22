@@ -32,6 +32,29 @@ export const createEmergency = async ({
   });
 };
 
+export const updateEmergency = async ({
+  emergency_id,
+  zipcode,
+  lead_responder
+}) => {
+  let body = {
+    emergencyId: emergency_id,
+    zipCode: zipcode,
+    leadResponder: lead_responder
+  };
+
+  return fetch(`${apiBase}/emergency`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("jwt")
+    },
+    body: JSON.stringify(body)
+  }).then(result => {
+    return result.json();
+  });
+};
+
 export const getEmergencies = async () => {
   return fetch(`${apiBase}/emergency`, {
     method: "GET",
@@ -72,8 +95,7 @@ export const getNotesForEmergency = async emergency_id => {
   });
 };
 
-export const searchEmergency = async ({emergency_name}) =>{
-
+export const searchEmergency = async ({ emergency_name }) => {
   return fetch(`${apiBase}/emergency-search?desired_search=${emergency_name}`, {
     method: "GET",
     headers: {

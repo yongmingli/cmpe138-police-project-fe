@@ -10,15 +10,18 @@ import { withStyles } from "@material-ui/core";
 // Shared components
 import { SearchInput } from "../../../../components";
 
-import { AddEmergencyDialog }  from "../index";
+import { AddEmergencyDialog } from "../index";
 
 // Component styles
 import styles from "./styles";
 
 class EmergencyToolbar extends Component {
+  handleSearch = params => {
+    console.log(params.target);
+  };
 
   render() {
-    const { classes, className } = this.props;
+    const { classes, className, search } = this.props;
 
     const rootClassName = classNames(classes.root, className);
 
@@ -28,9 +31,10 @@ class EmergencyToolbar extends Component {
           <SearchInput
             className={classes.searchInput}
             placeholder="Search emergencies"
+            onChange={this.handleSearch}
           />
           <span className={classes.spacer} />
-          <AddEmergencyDialog onClose={this.props.createEmergency}/>
+          <AddEmergencyDialog onClose={this.props.createEmergency} />
         </div>
       </div>
     );

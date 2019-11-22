@@ -1,8 +1,5 @@
 import React from "react";
 
-// Externals
-import PropTypes from "prop-types";
-
 import {
   CircularProgress,
   IconButton,
@@ -17,11 +14,7 @@ import {
   Button
 } from "@material-ui/core";
 
-import {
-  VisibilityRounded,
-  CommentRounded,
-  DoneRounded
-} from "@material-ui/icons";
+import { VisibilityRounded, DoneRounded } from "@material-ui/icons";
 
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -84,6 +77,7 @@ const ViewEmergencyModal = ({ emergency, onClose }) => {
   };
 
   const getNotes = async emergency => {
+    console.log(emergency);
     const { emergency_id } = emergency;
     const { notes } = await getNotesForEmergency(emergency_id);
     console.log(notes);
@@ -181,15 +175,17 @@ const ViewEmergencyModal = ({ emergency, onClose }) => {
             </PortletContent>
             <PortletFooter>
               <div className={classes.footer}>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  startIcon={<DoneRounded />}
-                  className={classes.button}
-                  onClick={handleResolveEmergency}
-                >
-                  Resolve Emergency
-                </Button>
+                {emergency.status !== "RESOLVED" ? (
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<DoneRounded />}
+                    className={classes.button}
+                    onClick={handleResolveEmergency}
+                  >
+                    Resolve Emergency
+                  </Button>
+                ) : null}
               </div>
             </PortletFooter>
           </Portlet>
@@ -197,10 +193,6 @@ const ViewEmergencyModal = ({ emergency, onClose }) => {
       </Modal>
     </div>
   );
-};
-
-ViewEmergencyModal.propTypes = {
-  classes: PropTypes.object.isRequired
 };
 
 export default ViewEmergencyModal;

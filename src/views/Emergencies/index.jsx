@@ -9,7 +9,12 @@ import { CircularProgress, Typography } from "@material-ui/core";
 import { Dashboard as DashboardLayout } from "../../layouts";
 
 // Shared services
-import { createEmergency, getEmergencies } from "../../services/emergency";
+import {
+  createEmergency,
+  getEmergencies,
+  updateEmergency,
+  searchEmergency
+} from "../../services/emergency";
 
 // Custom components
 import { EmergencyToolbar, EmergencyTable } from "./components";
@@ -25,16 +30,23 @@ class Emergencies extends Component {
     error: null
   };
 
-  async fetchEmergencies() {
+  async fetchEmergencies(q) {
     try {
       this.setState({ isLoading: true });
 
-      const { emergencies } = await getEmergencies(/*limit*/); // TODO add pagination
-
-      this.setState({
-        isLoading: false,
-        emergencies
-      });
+      if (q) {
+        const { emergencies } = await searchEmergency({ emergency_name: q });
+        this.setState({
+          isLoading: false,
+          emergencies
+        });
+      } else {
+        const { emergencies } = await getEmergencies(/*limit*/); // TODO add pagination
+        this.setState({
+          isLoading: false,
+          emergencies
+        });
+      }
     } catch (error) {
       const msg = error.toString();
       console.log(error);
@@ -53,6 +65,15 @@ class Emergencies extends Component {
       } catch (e) {
         console.log("error creating emergency", e);
       }
+    }
+  }
+
+  async editEmergency(params) {
+    try {
+      await updateEmergency({ ...params });
+      await this.fetchEmergencies();
+    } catch (e) {
+      console.log("error updating emergency", e);
     }
   }
 
@@ -85,6 +106,7 @@ class Emergencies extends Component {
       <EmergencyTable
         emergencies={emergencies}
         refresh={this.fetchEmergencies.bind(this)}
+        updateEmergency={this.editEmergency.bind(this)}
       />
     );
   }
@@ -97,7 +119,10 @@ class Emergencies extends Component {
     return (
       <DashboardLayout title="Emergencies">
         <div className={classes.root}>
-          <EmergencyToolbar createEmergency={this.addEmergency.bind(this)} />
+          <EmergencyToolbar
+            createEmergency={this.addEmergency.bind(this)}
+            search={this.fetchEmergencies.bind(this)}
+          />
           <div className={classes.content}>
             {this.renderEmergencies(emergencies)}
           </div>

@@ -1,49 +1,37 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import DateFnsUtils from "@date-io/date-fns";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker
-} from "@material-ui/pickers";
-import "date-fns";
+import { IconButton, Tooltip } from "@material-ui/core";
+import { EditRounded } from "@material-ui/icons";
+import { searchEmployee } from "services/user";
 
-export default function AddEmergencyDialog({ onClose }) {
+export default function EditEmergencyDialog({ onClose, emergency }) {
   const [open, setOpen] = React.useState(false);
   const [zipCode, setZipCode] = React.useState("");
-  const [note, setNote] = React.useState("");
-  const [selectedDate, setSelectedDate] = React.useState(Date.now());
-
-  const handleDateChange = date => {
-    setSelectedDate(date);
-  };
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  const [employees, setEmployees] = React.useState([]);
+  const [leadResponder, setLeadResponder] = React.useState("");
 
   const submit = () => {
     const params = {
-      zipCode: zipCode,
-      startTime: selectedDate,
-      note: note
+      emergency_id: emergency.emergency_id,
+      zipcode: zipCode,
+      lead_responder: leadResponder
     };
     setZipCode("");
-    setNote("");
-    setSelectedDate("");
+    setLeadResponder("");
     setOpen(false);
     onClose(true, params);
   };
 
   const handleClose = () => {
     setZipCode("");
-    setNote("");
-    setSelectedDate("");
+    setLeadResponder("");
     setOpen(false);
     onClose(false);
   };
@@ -52,8 +40,17 @@ export default function AddEmergencyDialog({ onClose }) {
     setZipCode(event.target.value);
   };
 
-  const handleNoteChange = event => {
-    setNote(event.target.value);
+  const handleLeadResponderChange = async event => {
+    try {
+      setLeadResponder(event.target.value);
+      const { employees } = await searchEmployee({
+        employee_name: event.target.value
+      });
+      console.log(employees);
+      // setEmployees(employees);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const canSubmit = () => {
@@ -62,23 +59,22 @@ export default function AddEmergencyDialog({ onClose }) {
 
   return (
     <div>
-      <Button
-        color="primary"
-        size="small"
-        variant="outlined"
-        onClick={handleClickOpen}
-      >
-        Add Emergency
-      </Button>
+      <Tooltip title="Edit Emergency">
+        <IconButton aria-label="edit emergency" onClick={() => setOpen(true)}>
+          <EditRounded />
+        </IconButton>
+      </Tooltip>
       <Dialog
         open={open}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Report a new emergency</DialogTitle>
+        <DialogTitle id="form-dialog-title">Edit an emergency</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {"To report an emergency fill out the form below and click submit."}
+            {
+              "To edit an emergency make changes to the form below and click submit."
+            }
           </DialogContentText>
           <TextField
             margin="dense"
@@ -92,28 +88,21 @@ export default function AddEmergencyDialog({ onClose }) {
             onChange={handleZipCodeChange}
             fullWidth
           />
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardTimePicker
-              margin="normal"
-              id="time-picker"
-              label="Emergency Start Time"
-              value={selectedDate}
-              onChange={handleDateChange}
-              KeyboardButtonProps={{
-                "aria-label": "change time"
-              }}
-            />
-          </MuiPickersUtilsProvider>
-          <TextField
-            id="notes"
-            label="Description"
-            multiline
-            rows="4"
-            value={note}
-            onChange={handleNoteChange}
-            margin="dense"
-            variant="filled"
-            fullWidth
+          <Autocomplete
+            id="free-solo-demo"
+            freeSolo
+            options={employees}
+            renderInput={params => (
+              <TextField
+                {...params}
+                label="Lead Responder"
+                margin="normal"
+                // variant="outlined"
+                onChange={handleLeadResponderChange}
+                value={leadResponder}
+                fullWidth
+              />
+            )}
           />
         </DialogContent>
         <DialogActions>

@@ -1,15 +1,25 @@
 import { apiBase } from "../config";
 
-export const createEmployee = ({ firstName, lastName, dob, type, username, password, phone }) => {
-  console.log(JSON.stringify({
-    firstName: firstName,
-    lastName: lastName,
-    dob: dob.toJSON().substring(0,10),
-    type: type,
-    username: username,
-    password: `${username}${dob.getYear()}`,
-    phone: phone
-  }));
+export const createEmployee = ({
+  firstName,
+  lastName,
+  dob,
+  type,
+  username,
+  password,
+  phone
+}) => {
+  console.log(
+    JSON.stringify({
+      firstName: firstName,
+      lastName: lastName,
+      dob: dob.toJSON().substring(0, 10),
+      type: type,
+      username: username,
+      password: `${username}${dob.getYear()}`,
+      phone: phone
+    })
+  );
 
   return fetch(`${apiBase}/employee`, {
     method: "POST",
@@ -20,7 +30,7 @@ export const createEmployee = ({ firstName, lastName, dob, type, username, passw
     body: JSON.stringify({
       firstName: firstName,
       lastName: lastName,
-      dob: dob.toJSON().substring(0,10),
+      dob: dob.toJSON().substring(0, 10),
       type: type,
       username: username,
       password: `${username}${dob.getYear()}`,
@@ -31,7 +41,7 @@ export const createEmployee = ({ firstName, lastName, dob, type, username, passw
   });
 };
 
-export const updateEmployee = ({eid, fname, lname, zipCode}) => {
+export const updateEmployee = ({ eid, fname, lname, zipCode }) => {
   let body = {
     eid: eid,
     firstName: fname,
@@ -83,8 +93,7 @@ export const getEmployees = () => {
   });
 };
 
-export const searchEmployee = async ({employee_name}) =>{
-
+export const searchEmployee = async ({ employee_name }) => {
   return fetch(`${apiBase}/employee-search?desired_search=${employee_name}`, {
     method: "GET",
     headers: {
