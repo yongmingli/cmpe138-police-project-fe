@@ -13,31 +13,38 @@ import { Grid } from "@material-ui/core";
 import { Dashboard as DashboardLayout } from "../../../../layouts";
 
 // Custom components
-import { EmergenciesInProgress, EmergenciesResolved } from "../../components";
+import { EmergenciesInProgress, EmergenciesResolved, EmergencyTable, EmergencyToolbar } from "../../components";
 
 import {
   createEmergency,
   getEmergencies,
   updateEmergency,
-  searchEmergency
-} from "services/emergency";
+  searchEmergency, assignLead, assignResponder
+} from "../../../../services/emergency";
 
 // Component styles
 import styles from "./styles";
-import { EmergencyTable } from "../../../Emergencies/components";
-import { EmergencyToolbar } from "views/Emergencies/components";
+import { createEmergencyNote } from "../../../../services/notes";
+import { getDashboardCounts } from "../../../../services/dashboard";
 
 class DashboardCallOperator extends Component {
   state = {
     isLoading: false,
     emergencies: [],
-    error: null
+    error: null,
+    counts: {}
   };
 
   async addEmergency(create, params) {
     if (create) {
       try {
-        await createEmergency({ ...params });
+        const res = await createEmergency({ ...params });
+        console.log(res);
+        await createEmergencyNote({
+          employeeId: params.e_id,
+          emergencyId: res.emergency.emergencyId,
+          note: params.note
+        });
         await this.fetchEmergencies();
       } catch (e) {
         console.log("error creating emergency", e);
@@ -45,9 +52,20 @@ class DashboardCallOperator extends Component {
     }
   }
 
+  async assignResponder(params) {
+    try {
+      await assignResponder({ ...params });
+    } catch(e) {
+      console.log("error assigning responder", e);
+    }
+  }
+
   async editEmergency(params) {
     try {
       await updateEmergency({ ...params });
+      if (params.lead_responder) {
+        await assignLead({ ...params })
+      }
       await this.fetchEmergencies();
     } catch (e) {
       console.log("error updating emergency", e);
@@ -59,13 +77,13 @@ class DashboardCallOperator extends Component {
       this.setState({ isLoading: true });
 
       if (q) {
-        const { emergencies } = await searchEmergency({ emergency_name: q });
+        const { emergencies } = await searchEmergency({ emergency_name: q});
         this.setState({
           isLoading: false,
           emergencies
         });
       } else {
-        const { emergencies } = await getEmergencies(/*limit*/); // TODO add pagination
+        const { emergencies } = await getEmergencies();
         this.setState({
           isLoading: false,
           emergencies
@@ -78,7 +96,13 @@ class DashboardCallOperator extends Component {
         isLoading: false,
         error: msg
       });
+    } finally {
+      this.fetchDashboardCounts();
     }
+  }
+
+  async fetchDashboardCounts() {
+    this.setState({counts: await getDashboardCounts()});
   }
 
   componentDidMount() {
@@ -111,28 +135,37 @@ class DashboardCallOperator extends Component {
         emergencies={emergencies}
         refresh={this.fetchEmergencies.bind(this)}
         updateEmergency={this.editEmergency.bind(this)}
+        addResponder={this.assignResponder.bind(this)}
       />
     );
   }
 
   render() {
-    const { classes } = this.props;
-    const { emergencies } = this.state;
+    const { classes, user } = this.props;
+    const { emergencies, counts } = this.state;
 
     return (
       <DashboardLayout title="Dashboard">
         <div className={classes.root}>
           <Grid container spacing={4}>
-            <Grid item lg={6} sm={6} xl={6} xs={12}>
-              <EmergenciesInProgress className={classes.item} />
-            </Grid>
-            <Grid item lg={6} sm={6} xl={6} xs={12}>
-              <EmergenciesResolved className={classes.item} />
-            </Grid>
+            {
+              user.type === "CALL_OPERATOR" ?
+                <>
+                  <Grid item lg={6} sm={6} xl={6} xs={12}>
+                    <EmergenciesInProgress className={classes.item} count={counts.emergencyInProgressCount} />
+                  </Grid>
+                  <Grid item lg={6} sm={6} xl={6} xs={12}>
+                    <EmergenciesResolved className={classes.item} count={counts.emergencyResolvedCount} />
+                  </Grid>
+                </>
+              : null
+              }
+
             <Grid item lg={12} md={12} xl={12} xs={12}>
               <EmergencyToolbar
                 createEmergency={this.addEmergency.bind(this)}
                 search={this.fetchEmergencies.bind(this)}
+                user={user}
               />
               {this.renderEmergencies(emergencies)}
             </Grid>

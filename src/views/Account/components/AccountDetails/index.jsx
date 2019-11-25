@@ -92,11 +92,11 @@ class AccountDetails extends Component {
 
   handleUpdateProfile = async () => {
     try {
-      const { fname, lname } = this.state.values;
+      const { fname, lname, zipCode } = this.state.values;
       const { user } = this.props;
 
       this.setState({ isLoading: true });
-      const res = await updateProfile({eid: user.e_id, fname, lname});
+      const res = await updateProfile({eid: user.e_id, fname, lname, zipCode});
 
       this.setState({ isLoading: false, submitError: null });
       console.log(res);
@@ -116,7 +116,8 @@ class AccountDetails extends Component {
         id: nextProps.user.e_id,
         fname: nextProps.user.fname,
         lname: nextProps.user.lname,
-        username: nextProps.user.username
+        username: nextProps.user.username,
+        zipCode: nextProps.user.zipcode
       },
       type: nextProps.user.type
     });

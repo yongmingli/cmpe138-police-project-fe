@@ -6,8 +6,8 @@ export const createEmployee = ({
   dob,
   type,
   username,
-  password,
-  phone
+  phone,
+  zipCode
 }) => {
   console.log(
     JSON.stringify({
@@ -17,7 +17,8 @@ export const createEmployee = ({
       type: type,
       username: username,
       password: `${username}${dob.getYear()}`,
-      phone: phone
+      phone: phone,
+      zipCode: zipCode
     })
   );
 
@@ -41,14 +42,17 @@ export const createEmployee = ({
   });
 };
 
-export const updateEmployee = ({ eid, fname, lname, zipCode }) => {
+export const updateEmployee = ({ eid, fname, lname, zipCode, password }) => {
   let body = {
     eid: eid,
     firstName: fname,
-    lastName: lname
+    lastName: lname,
   };
   if (zipCode) {
     body.zipCode = zipCode;
+  }
+  if (password) {
+    body.password = password;
   }
 
   return fetch(`${apiBase}/employee`, {
@@ -58,24 +62,6 @@ export const updateEmployee = ({ eid, fname, lname, zipCode }) => {
       Authorization: localStorage.getItem("jwt")
     },
     body: JSON.stringify(body)
-  }).then(result => {
-    return result.json();
-  });
-};
-
-export const updateUser = ({ id, firstName, lastName, email, password }) => {
-  return fetch(`${apiBase}/user/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: localStorage.getItem("jwt")
-    },
-    body: JSON.stringify({
-      firstName,
-      lastName,
-      email,
-      password
-    })
   }).then(result => {
     return result.json();
   });
@@ -93,8 +79,12 @@ export const getEmployees = () => {
   });
 };
 
-export const searchEmployee = async ({ employee_name }) => {
-  return fetch(`${apiBase}/employee-search?desired_search=${employee_name}`, {
+export const searchEmployee = async ({ q, type, zip}) => {
+  let param = `${apiBase}/employee-search?desired_search=${q}`;
+  param = type ? param + `&type=${type}` : param;
+  param = zip ? param + `&zip=${zip}` : param;
+  console.log(param);
+  return fetch(param, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

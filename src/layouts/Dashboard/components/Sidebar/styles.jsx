@@ -18,6 +18,7 @@ export default theme => ({
     fontSize: 0
   },
   logoImage: {
+    maxHeight: "64px",
     cursor: "pointer"
   },
   logoDivider: {

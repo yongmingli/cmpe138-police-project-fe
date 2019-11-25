@@ -10,7 +10,7 @@ import classNames from "classnames";
 import PropTypes from "prop-types";
 
 // Material components
-import { Avatar, CircularProgress, Divider, List, Typography, withStyles } from "@material-ui/core";
+import { CircularProgress, Divider, List, Typography, withStyles } from "@material-ui/core";
 
 // Material icons
 import {
@@ -38,7 +38,7 @@ class Sidebar extends Component {
             <img
               alt="site logo"
               className={classes.logoImage}
-              src="/images/connected_world.svg"
+              src="https://cdn.freebiesupply.com/logos/large/2x/police-1-logo-png-transparent.png"
             />
           </Link>
         </div>
@@ -48,13 +48,6 @@ class Sidebar extends Component {
           <CircularProgress className={classes.progress} />
         ) : (
           <div className={classes.profile}>
-            <Link to="/settings">
-              <Avatar
-                alt={user.username}
-                className={classes.avatar}
-                src="/images/avatars/avatar_3.png"
-              />
-            </Link>
             <Typography className={classes.nameText} variant="h6">
               {`${user.fname} ${user.lname}`}
             </Typography>
@@ -63,8 +56,6 @@ class Sidebar extends Component {
             </Typography>
           </div>
         ) }
-
-
 
         <Divider className={classes.profileDivider}/>
         <List component="div" disablePadding>
@@ -79,13 +70,6 @@ class Sidebar extends Component {
                        to="/employees"
                        icon={<DashboardIcon/>}
                        employeeTypes={["ADMIN"]}
-                       user={user}
-                       classes={classes}
-          />
-          <SideBarItem text="Emergencies"
-                       to="/emergencies"
-                       icon={<DashboardIcon/>}
-                       employeeTypes={["POLICE_OFFICER", "CALL_OPERATOR"]}
                        user={user}
                        classes={classes}
           />

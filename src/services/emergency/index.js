@@ -1,4 +1,6 @@
 import { apiBase } from "../config";
+import store from "../../redux/store";
+
 
 const emergencyStatus = {
   IN_PROGRESS: "IN_PROGRESS"
@@ -40,7 +42,7 @@ export const updateEmergency = async ({
   let body = {
     emergencyId: emergency_id,
     zipCode: zipcode,
-    leadResponder: lead_responder
+    leadResponder: lead_responder.e_id
   };
 
   return fetch(`${apiBase}/emergency`, {
@@ -56,7 +58,9 @@ export const updateEmergency = async ({
 };
 
 export const getEmergencies = async () => {
-  return fetch(`${apiBase}/emergency`, {
+  const user = store.getState().user.user;
+  console.log("asd", user);
+  return fetch(`${apiBase}/emergency${user.type === "POLICE_OFFICER" ? `?eid=${user.e_id}` : ""}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -96,7 +100,56 @@ export const getNotesForEmergency = async emergency_id => {
 };
 
 export const searchEmergency = async ({ emergency_name }) => {
-  return fetch(`${apiBase}/emergency-search?desired_search=${emergency_name}`, {
+  const user = store.getState().user.user;
+  return fetch(`${apiBase}/emergency-search?${user.type === "POLICE_OFFICER" ? `&eid=${user.e_id}&` : ""}desired_search=${emergency_name}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("jwt")
+    }
+  }).then(result => {
+    return result.json();
+  });
+};
+
+export const assignLead = async({emergency_id, lead_responder }) => {
+  const body = {
+    emergencyId: emergency_id,
+    leadResponder: lead_responder.e_id
+  };
+  return fetch(`${apiBase}/emergency-assign-lead`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("jwt")
+    },
+    body: JSON.stringify(body)
+  }).then(result => {
+    return result.json();
+  });
+};
+
+export const assignResponder = async({emergency_id, responder }) => {
+  const body = {
+    emergencyId: emergency_id,
+    responder: responder.e_id
+  };
+
+  console.log(body);
+  return fetch(`${apiBase}/emergency-assign-responder`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("jwt")
+    },
+    body: JSON.stringify(body)
+  }).then(result => {
+    return result.json();
+  });
+};
+
+export const getEmergencyDetails = async eid => {
+  return fetch(`${apiBase}/emergency-detail?eid=${eid}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

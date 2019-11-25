@@ -5,7 +5,7 @@ import classNames from "classnames";
 import PropTypes from "prop-types";
 
 // Material helpers
-import { withStyles } from "@material-ui/core";
+import { CircularProgress, withStyles } from "@material-ui/core";
 
 // Material components
 import { Typography } from "@material-ui/core";
@@ -21,7 +21,7 @@ import styles from "./styles";
 
 class EmergenciesResolved extends Component {
   render() {
-    const { classes, className, ...rest } = this.props;
+    const { classes, className, count, ...rest } = this.props;
 
     const rootClassName = classNames(classes.root, className);
 
@@ -33,18 +33,14 @@ class EmergenciesResolved extends Component {
               EMERGENCIES RESOLVED
             </Typography>
             <Typography className={classes.value} variant="h3">
-              1,400
+              { count ? count : <CircularProgress className={classes.progress} />}
             </Typography>
           </div>
           <div className={classes.iconWrapper}>
             <HomeOutlinedIcon className={classes.icon} />
           </div>
         </div>
-        <div className={classes.footer} href="#test123">
-          <Typography className={classes.caption} variant="caption">
-            View emergencies
-          </Typography>
-        </div>
+
       </Paper>
     );
   }

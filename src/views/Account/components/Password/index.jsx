@@ -23,17 +23,11 @@ import {
 // Component styles
 import styles from "./styles";
 import schema from "./schema";
-import { updateUser } from "../../../../services/user";
+import { updateEmployee } from "../../../../services/user";
 
 // Service methods
 const updatePassword = async values => {
-  const res = await updateUser(values);
-
-  if (!res.status) {
-    throw new Error(res.error);
-  } else {
-    return res;
-  }
+  await updateEmployee(values);
 };
 
 class Password extends Component {
@@ -85,7 +79,7 @@ class Password extends Component {
       console.log(values);
 
       this.setState({ isLoading: true });
-      await updatePassword(values);
+      await updatePassword({eid: values.id, ...values});
 
       this.setState({
         isLoading: false,
@@ -107,7 +101,7 @@ class Password extends Component {
   componentWillReceiveProps(nextProps, nextContext) {
     this.setState({
       values: {
-        id: nextProps.user.id,
+        id: nextProps.user.e_id,
         firstName: nextProps.user.firstName,
         lastName: nextProps.user.lastName,
         email: nextProps.user.email,

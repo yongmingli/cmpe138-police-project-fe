@@ -5,7 +5,7 @@ import classNames from "classnames";
 import PropTypes from "prop-types";
 
 // Material helpers
-import { withStyles } from "@material-ui/core";
+import { CircularProgress, withStyles } from "@material-ui/core";
 
 // Material components
 import { Typography } from "@material-ui/core";
@@ -21,7 +21,7 @@ import styles from "./styles";
 
 class EmergenciesInProgress extends Component {
   render() {
-    const { classes, className, ...rest } = this.props;
+    const { classes, className, count, ...rest } = this.props;
 
     const rootClassName = classNames(classes.root, className);
 
@@ -33,17 +33,12 @@ class EmergenciesInProgress extends Component {
               EMERGENCIES IN PROGRESS
             </Typography>
             <Typography className={classes.value} variant="h3">
-              200
+              { count ? count : <CircularProgress className={classes.progress} />}
             </Typography>
           </div>
           <div className={classes.iconWrapper}>
             <MoneyIcon className={classes.icon} />
           </div>
-        </div>
-        <div className={classes.footer} href="#test123">
-          <Typography className={classes.caption} variant="caption">
-            View emergencies
-          </Typography>
         </div>
       </Paper>
     );
@@ -52,7 +47,8 @@ class EmergenciesInProgress extends Component {
 
 EmergenciesInProgress.propTypes = {
   className: PropTypes.string,
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  count: PropTypes.number.isRequired
 };
 
 export default withStyles(styles)(EmergenciesInProgress);

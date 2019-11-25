@@ -20,10 +20,9 @@ class Dashboard extends Component {
     return (
       <>
         {user && user.type && user.type === "ADMIN" ? <DashboardAdmin /> : null}
-        {user && user.type && user.type === "CALL_OPERATOR" ? (
-          <DashboardCallOperator />
+        {user && user.type && (user.type === "CALL_OPERATOR" || user.type === "POLICE_OFFICER") ? (
+          <DashboardCallOperator user={user} />
         ) : null}
-        ;
       </>
     );
   }

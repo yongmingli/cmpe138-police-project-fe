@@ -17,7 +17,7 @@ import { Grid, CircularProgress } from "@material-ui/core";
 import { Dashboard as DashboardLayout } from "../../layouts";
 
 // Custom components
-import { AccountProfile, AccountDetails, Password } from "./components";
+import { AccountDetails, Password } from "./components";
 
 // Component styles
 import styles from "./styles";
@@ -35,14 +35,7 @@ class Account extends Component {
           ) : (
             <Grid container spacing={4}>
               <Grid item lg={4} md={6} xl={4} xs={12}>
-                <Grid container spacing={4}>
-                  <Grid item lg={12} md={12} xl={12} xs={12}>
-                    <AccountProfile user={user} />
-                  </Grid>
-                  <Grid item lg={12} md={12} xl={12} xs={12}>
-                    <Password user={user} />
-                  </Grid>
-                </Grid>
+                <Password user={user} />
               </Grid>
               <Grid item lg={8} md={6} xl={8} xs={12}>
                 <AccountDetails user={user} />

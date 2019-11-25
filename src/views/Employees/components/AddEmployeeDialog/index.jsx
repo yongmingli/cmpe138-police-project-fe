@@ -20,6 +20,7 @@ export default function AddEmployeeDialog({ onClose }) {
   const [lastName, setLastName] = React.useState("");
   const [username, setUsername] = React.useState("");
   const [phone, setPhone] = React.useState("");
+  const [zipCode, setZipCode] = React.useState("");
   const [employeeType, setEmployeeType] = React.useState("");
   const [selectedDate, setSelectedDate] = React.useState(new Date("1988-01-01"));
 
@@ -38,13 +39,15 @@ export default function AddEmployeeDialog({ onClose }) {
       username: username,
       phone: phone,
       type: employeeType,
-      dob: selectedDate
+      dob: selectedDate,
+      zipCode: zipCode
     };
     setFirstName("");
     setLastName("");
     setUsername("");
     setPhone("");
     setEmployeeType("");
+    setZipCode("");
     setSelectedDate(new Date("1988-01-01"));
     setOpen(false);
     onClose(true, params);
@@ -56,6 +59,7 @@ export default function AddEmployeeDialog({ onClose }) {
     setUsername("");
     setPhone("");
     setEmployeeType("");
+    setZipCode("");
     setSelectedDate(new Date("1988-01-01"));
     setOpen(false);
     onClose(false);
@@ -79,6 +83,10 @@ export default function AddEmployeeDialog({ onClose }) {
 
   const handlePhoneChange = event => {
     setPhone(event.target.value);
+  };
+
+  const handleZipChange = event => {
+    setZipCode(event.target.value);
   };
 
   const canSubmit = () => {
@@ -129,8 +137,18 @@ export default function AddEmployeeDialog({ onClose }) {
             onChange={handlePhoneChange}
             fullWidth
           />
+          { employeeType === "POLICE_OFFICER" ?
+            <TextField
+              margin="dense"
+              id="phone"
+              label="Zipcode"
+              type="text"
+              onChange={handleZipChange}
+              fullWidth
+            /> : null
+          }
           <FormControl margin="dense"
-                       fullWidth/*className={classes.formControl}*/>
+                       fullWidth>
             <InputLabel id="demo-simple-select-label">Employee Type</InputLabel>
             <Select
               labelId="demo-simple-select-label"
