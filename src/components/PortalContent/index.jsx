@@ -1,3 +1,5 @@
+// SJSU CMPE 138Fall2019 TEAM13
+
 import React from "react";
 
 // Externals
@@ -21,7 +23,7 @@ const styles = theme => ({
   }
 });
 
-const PortletContent = props => {
+const PortalContent = props => {
   const { classes, className, children, noPadding, ...rest } = props;
 
   const rootClassName = classNames(
@@ -39,11 +41,11 @@ const PortletContent = props => {
   );
 };
 
-PortletContent.propTypes = {
+PortalContent.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   classes: PropTypes.object.isRequired,
   noPadding: PropTypes.bool
 };
 
-export default withStyles(styles)(PortletContent);
+export default withStyles(styles)(PortalContent);
